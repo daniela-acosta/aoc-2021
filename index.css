@@ -1,0 +1,6 @@
+.file-loader {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  background-color: red;
+}
