@@ -29,7 +29,8 @@ input.addEventListener("change", () => {
     textarea.value = lines.join("\n");
 
     const data = lines.map((d) => +d);
-    countIncrements(data);
+    countIncrements(data); // 1665
+    countIncrements(groupByThree(data)); // 1702
   };
 
   reader.onerror = (e) => alert(e.target.error.name);
@@ -47,4 +48,16 @@ const countIncrements = (data) => {
     i++;
   }
   console.log("total increments: ", count);
+};
+
+const groupByThree = (data) => {
+  const newArr = [];
+  let el = 0;
+  let i = 0;
+  while (i < data.length - 2) {
+    el = data[i] + data[i + 1] + data[i + 2];
+    i++;
+    newArr.push(el);
+  }
+  return newArr;
 };
