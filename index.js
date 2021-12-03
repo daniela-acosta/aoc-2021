@@ -28,9 +28,21 @@ input.addEventListener("change", () => {
     const lines = file.split(/\r\n|\n/);
     textarea.value = lines.join("\n");
 
-    const data = lines.map((d) => +d);
-    countIncrements(data); // 1665
-    countIncrements(groupByThree(data)); // 1702
+    // DAY 1
+    // const data = lines.map((d) => +d);
+    // countIncrements(data); // 1665
+    // countIncrements(groupByThree(data)); // 1702
+
+    // DAY 2
+    const data = lines.map((line) => coordinatesArr(line));
+
+    const forward = sumByType(data, "forward");
+    const up = sumByType(data, "up");
+    const down = sumByType(data, "down");
+    console.log("XY: ", forward * (-up + down)); // 1714950
+
+    const position = getPositionChange(data);
+    console.log(position.x * position.depth); // 1281977850
   };
 
   reader.onerror = (e) => alert(e.target.error.name);
@@ -60,4 +72,42 @@ const groupByThree = (data) => {
     newArr.push(el);
   }
   return newArr;
+};
+
+const coordinatesArr = (line) => {
+  const elements = line.split(" ");
+  return elements;
+};
+
+const sumByType = (arr, type) => {
+  const res = arr
+    .filter((el) => el[0] === type)
+    .map((el) => +el[1])
+    .reduce((a, b) => a + b);
+  return res;
+};
+
+const getPositionChange = (arr) => {
+  let position = {
+    aim: 0,
+    depth: 0,
+    x: 0,
+  };
+
+  let i = 0;
+
+  for (j of arr) {
+    if (j[0] === "up") {
+      position.aim = position.aim - +j[1];
+    }
+    if (j[0] === "down") {
+      position.aim = position.aim + +j[1];
+    }
+    if (j[0] === "forward") {
+      position.x = position.x + +j[1];
+      position.depth = position.depth + +j[1] * position.aim;
+    }
+  }
+
+  return position;
 };
