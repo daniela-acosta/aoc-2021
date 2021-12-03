@@ -29,20 +29,20 @@ input.addEventListener("change", () => {
     textarea.value = lines.join("\n");
 
     // DAY 1
-    // const data = lines.map((d) => +d);
-    // countIncrements(data); // 1665
-    // countIncrements(groupByThree(data)); // 1702
+    const data = lines.map((d) => +d);
+    countIncrements(data); // 1665
+    countIncrements(groupByThree(data)); // 1702
 
     // DAY 2
-    const data = lines.map((line) => coordinatesArr(line));
+    // const data = lines.map((line) => coordinatesArr(line));
 
-    const forward = sumByType(data, "forward");
-    const up = sumByType(data, "up");
-    const down = sumByType(data, "down");
-    console.log("XY: ", forward * (-up + down)); // 1714950
+    // const forward = sumByType(data, "forward");
+    // const up = sumByType(data, "up");
+    // const down = sumByType(data, "down");
+    // console.log("XY: ", forward * (-up + down)); // 1714950
 
-    const position = getPositionChange(data);
-    console.log(position.x * position.depth); // 1281977850
+    // const position = getPositionChange(data);
+    // console.log(position.x * position.depth); // 1281977850
   };
 
   reader.onerror = (e) => alert(e.target.error.name);
@@ -51,26 +51,16 @@ input.addEventListener("change", () => {
 });
 
 const countIncrements = (data) => {
-  let count = 0;
-  let i = 0;
-  while (i < data.length) {
-    if (data[i] < data[i + 1]) {
-      count++;
-    }
-    i++;
-  }
+  const count = data.filter((el, ix, arr) => el < arr[ix + 1]).length;
   console.log("total increments: ", count);
 };
 
 const groupByThree = (data) => {
-  const newArr = [];
-  let el = 0;
-  let i = 0;
-  while (i < data.length - 2) {
-    el = data[i] + data[i + 1] + data[i + 2];
-    i++;
-    newArr.push(el);
-  }
+  const newArr = data
+    .map((el, ix, arr) => {
+      return +el + +arr[ix + 1] + +arr[ix + 2];
+    })
+    .slice(0, data.length - 2);
   return newArr;
 };
 
