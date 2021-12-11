@@ -29,9 +29,9 @@ input.addEventListener("change", () => {
     textarea.value = lines.join("\n");
 
     // DAY 1
-    const data = lines.map((d) => +d);
-    countIncrements(data); // 1665
-    countIncrements(groupByThree(data)); // 1702
+    // const data = lines.map((d) => +d);
+    // countIncrements(data); // 1665
+    // countIncrements(groupByThree(data)); // 1702
 
     // DAY 2
     // const data = lines.map((line) => coordinatesArr(line));
@@ -43,10 +43,64 @@ input.addEventListener("change", () => {
 
     // const position = getPositionChange(data);
     // console.log(position.x * position.depth); // 1281977850
+
+    // DAY 3
+    const arrLines = lines.map((line) => line.split()); // this is original array
+    const numberArr = getTransposedNumberArr(arrLines); // this is prepared data
+    const gammaBin = numberArr.map((row) => getMostCommonInRow(row)).join("");
+    const epsilonBin = numberArr
+      .map((row) => getLeastCommonInRow(row))
+      .join("");
+    const gamma = binToDec(gammaBin);
+    const epsilon = binToDec(epsilonBin);
+    console.log(gamma * epsilon); // 3320834
+
+    let originalData1 = lines.map((line) => line.split());
+    let preparedData1 = [];
+    let mostCommonInRow = null;
+    let i = 0;
+    while (i < 12) {
+      // prepare data
+      preparedData1 = getTransposedNumberArr(originalData1);
+      console.log(preparedData1);
+      // get most common in row i
+      mostCommonInRow = getMostCommonInRow(preparedData1[i]);
+      console.log(`most common in row ${i}`, mostCommonInRow);
+      // filter original array from least common
+      originalData1 = originalData1.filter(
+        (arr) => arr[0][i] === mostCommonInRow.toString()
+      );
+      console.log(originalData1);
+      i++;
+      if (originalData1.length <= 1) break;
+    }
+    const oxGeneratorRating = binToDec(originalData1[0]);
+
+    let originalData2 = lines.map((line) => line.split());
+    let preparedData2 = [];
+    let leastCommonInRow = null;
+    let j = 0;
+    while (j < 12) {
+      // prepare data
+      preparedData2 = getTransposedNumberArr(originalData2);
+      console.log(preparedData2);
+      // get most common in row i
+      leastCommonInRow = getLeastCommonInRow(preparedData2[j]);
+      console.log(`most common in row ${j}`, leastCommonInRow);
+      // filter original array from least common
+      originalData2 = originalData2.filter(
+        (arr) => arr[0][j] === leastCommonInRow.toString()
+      );
+      console.log(originalData2);
+      j++;
+      if (originalData2.length <= 1) break;
+    }
+    const CO2ScrubberRating = binToDec(originalData2[0]);
+
+    console.log("result", oxGeneratorRating * CO2ScrubberRating); //4481199
   };
 
   reader.onerror = (e) => alert(e.target.error.name);
-
   reader.readAsText(file);
 });
 
@@ -100,4 +154,33 @@ const getPositionChange = (arr) => {
   }
 
   return position;
+};
+
+const binToDec = (str) => {
+  return parseInt(str, 2);
+};
+
+const transposeArr = (arr) => {
+  return arr[0].map((col, i) => arr.map((row) => row[i]));
+};
+
+const getTransposedNumberArr = (arrLines) => {
+  const data = arrLines.map((arr) => arr[0].split(""));
+  const transposed = transposeArr(data);
+  const numberArr = transposed.map((arr) => arr.map((i) => +i));
+  return numberArr;
+};
+
+const getMostCommonInRow = (row) => {
+  const countOnes = row.filter((i) => i === 1).length;
+  const countZeroes = row.length - countOnes;
+  const greatest = countOnes - countZeroes >= 0 ? 1 : 0;
+  return greatest;
+};
+
+const getLeastCommonInRow = (row) => {
+  const countOnes = row.filter((i) => i === 1).length;
+  const countZeroes = row.length - countOnes;
+  const least = countOnes - countZeroes >= 0 ? 0 : 1;
+  return least;
 };
